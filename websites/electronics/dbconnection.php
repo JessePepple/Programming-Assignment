@@ -72,6 +72,36 @@ function find($pdo, $table, $field, $value = null, $orderBy = 'id', $order = 'DE
     return $stmt->fetchAll();
 }
 
+/**
+ * Our homepage product listing
+ */
+function homeListing($pdo)
+{
+    $stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC LIMIT 10");
+
+    $stmt->execute();
+
+    return $stmt->fetchAll();
+}
+
+/**
+ * Returns the answers for a question
+ */
+function getAnswers($questionId, $pdo)
+{
+    $sql = "SELECT
+    users.email,
+    answers.*
+    FROM answers INNER JOIN users ON answers.answered_by = users.id WHERE
+    answers.question_id = :value";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['value' => $questionId]);
+
+    $answers = $stmt->fetchAll();
+
+    return $answers;
+}
 
 /**
  * Inserts data into a table
